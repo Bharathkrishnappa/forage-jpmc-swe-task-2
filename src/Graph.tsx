@@ -27,9 +27,7 @@ class Graph extends Component<IProps, {}> {
   table: Table | undefined;
 
   render() {
-    const elem = React.createElement('perspective-viewer');
-    console.log("Perspective Viewer Element Created: ", elem); // Log the created element
-    return elem;
+    return React.createElement('perspective-viewer');
   }
 
   componentDidMount() {
@@ -43,10 +41,7 @@ class Graph extends Component<IProps, {}> {
     };
 
     if (typeof window.perspective !== 'undefined' && window.perspective.worker()) {
-      console.log("Perspective is loaded"); // Add this line
       this.table = window.perspective.worker().table(schema);
-    } else {
-      console.error("Perspective library not found"); // Add error log
     }
 
     if (this.table) {
@@ -62,14 +57,11 @@ class Graph extends Component<IProps, {}> {
         timestamp: "distinct count"
       }));
     } else {
-      console.error("Perspective table not available");
+      console.error("Perspective not available");
     }
   }
 
   componentDidUpdate(prevProps: IProps) {
-    console.log("Previous Props: ", prevProps.data); // Log previous props data
-    console.log("Current Props: ", this.props.data); // Log current props data
-
     if (this.table) {
       const existingTimestamps = new Set(this.props.data.map(el => el.timestamp));
       const newData = this.props.data.filter((el: any) => !existingTimestamps.has(el.timestamp));
@@ -79,8 +71,8 @@ class Graph extends Component<IProps, {}> {
       if (newData.length > 0) {
         this.table.update(newData.map((el: any) => ({
           stock: el.stock,
-          top_ask_price: el.top_ask?.price || 0,
-          top_bid_price: el.top_bid?.price || 0,
+          top_ask_price: el.top_ask && el.top_ask.price ? el.top_ask.price : 0,
+          top_bid_price: el.top_bid && el.top_bid.price ? el.top_bid.price : 0,
           timestamp: el.timestamp,
         })));
       }
