@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2020",  // Use a version that supports optional chaining if you choose to keep it.
+    "target": "es2020", // Keep this to support optional chaining and other ES2020 features.
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -12,7 +12,8 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "react-jsx"
+    "jsx": "react" // Change this to 'react' for compatibility.
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }
