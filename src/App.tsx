@@ -43,8 +43,13 @@ class App extends Component<{}, IState> {
     let x = 0;
     const interval = setInterval(() => {
       DataStreamer.getData((serverResponds: ServerRespond[]) => {
-        this.setState({
-          data: serverResponds,
+        const uniqueData = serverResponds.filter((item, index, self) =>
+          index === self.findIndex((t) => (
+            t.timestamp === item.timestamp && t.stock === item.stock
+          ))
+        );
+        this.setState((prevState) => ({
+          data: [...prevState.data, ...uniqueData], 
           showGraph: true,
         });
       });
