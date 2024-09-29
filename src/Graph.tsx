@@ -41,7 +41,7 @@ class Graph extends Component<IProps, {}> {
       timestamp: 'date',
     };
 
-    if (window.perspective && window.perspective.worker()) {
+    if (typeof window.perspective !== 'undefined' && window.perspective.worker()) {
       this.table = window.perspective.worker().table(schema);
     }
     if (this.table) {
@@ -67,6 +67,8 @@ class Graph extends Component<IProps, {}> {
     if (this.table) {
       const existingTimestamps = new Set(this.props.data.map(el => el.timestamp));
       const newData = this.props.data.filter((el: any) => !existingTimestamps.has(el.timestamp));
+      console.log("Existing Timestamps: ", existingTimestamps);
+      console.log("New Data: ", newData);
       if (newData.length > 0) {
         this.table.update(newData.map((el: any) => ({
           stock: el.stock,
@@ -74,6 +76,7 @@ class Graph extends Component<IProps, {}> {
           top_bid_price: el.top_bid?.price || 0,
           timestamp: el.timestamp,
         })));
+      }
     
     }
   }
