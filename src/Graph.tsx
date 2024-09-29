@@ -62,20 +62,19 @@ class Graph extends Component<IProps, {}> {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: IProps) {
     // Everytime the data props is updated, insert the data into Perspective table
     if (this.table) {
-      // As part of the task, you need to fix the way we update the data props to
-      // avoid inserting duplicated entries into Perspective table again.
-      this.table.update(this.props.data.map((el: any) => {
-        // Format the data from ServerRespond to the schema
-        return {
+      const existingTimestamps = new Set(this.props.data.map(el => el.timestamp));
+      const newData = this.props.data.filter((el: any) => !existingTimestamps.has(el.timestamp));
+      if (newData.length > 0) {
+        this.table.update(newData.map((el: any) => ({
           stock: el.stock,
-          top_ask_price: el.top_ask && el.top_ask.price || 0,
-          top_bid_price: el.top_bid && el.top_bid.price || 0,
+          top_ask_price: el.top_ask?.price || 0,
+          top_bid_price: el.top_bid?.price || 0,
           timestamp: el.timestamp,
-        };
-      }));
+        })));
+    
     }
   }
 }
